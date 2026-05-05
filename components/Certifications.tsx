@@ -1,36 +1,28 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
-import { supabase, Certification } from '@/lib/supabase'
 
-const fallbackCerts: Certification[] = [
+interface Certification {
+  id: string
+  title: string
+  date: string
+  image_url: string
+}
+
+const certs: Certification[] = [
   { id: '1', title: 'Learn PHP and MYSQL for Web Application and Web Development', date: 'Sept 26, 2024', image_url: '/1.png' },
   { id: '2', title: 'PHP with MYSQL', date: 'Dec 9, 2024', image_url: '/2.png' },
   { id: '3', title: 'Build Complete CMS Blog in PHP MySQL Bootstrap & PDO', date: 'Dec 10, 2024', image_url: '/3.png' },
   { id: '4', title: 'Introduction to Large Language Models', date: 'Mar 25, 2026', image_url: '/4.png' },
-  
 ]
 
 export default function Certifications() {
-  const [certs, setCerts] = useState<Certification[]>([])
   const [selected, setSelected] = useState<Certification | null>(null)
-  const [loading, setLoading] = useState(true)
   const trackRef = useRef<HTMLDivElement>(null)
   const offsetRef = useRef(0)
   const rafRef = useRef<number>(0)
   const isPausedRef = useRef(false)
 
   useEffect(() => {
-    const fetchCerts = async () => {
-      const { data, error } = await supabase.from('certifications').select('*').order('created_at', { ascending: false })
-      setCerts(data && !error ? data : fallbackCerts)
-      setLoading(false)
-    }
-    fetchCerts()
-  }, [])
-
-  // Auto-scroll animation
-  useEffect(() => {
-    if (loading || certs.length === 0) return
     const track = trackRef.current
     if (!track) return
 
@@ -50,7 +42,7 @@ export default function Certifications() {
 
     rafRef.current = requestAnimationFrame(step)
     return () => cancelAnimationFrame(rafRef.current)
-  }, [loading, certs])
+  }, [])
 
   const loopedCerts = [...certs, ...certs, ...certs]
 
@@ -137,65 +129,58 @@ export default function Certifications() {
           </p>
         </div>
 
-        {loading ? (
-          <div style={{ textAlign: 'center', fontFamily: 'monospace', color: '#00f5ff', fontSize: '12px', letterSpacing: '0.2em' }}
-            className="animate-pulse">
-            LOADING CERTS...
-          </div>
-        ) : (
+        <div
+          style={{ position: 'relative', overflow: 'hidden', paddingBottom: '8px' }}
+          onMouseEnter={() => { isPausedRef.current = true }}
+          onMouseLeave={() => { isPausedRef.current = false }}
+        >
+          <div className="carousel-fade-left" />
+          <div className="carousel-fade-right" />
+
           <div
-            style={{ position: 'relative', overflow: 'hidden', paddingBottom: '8px' }}
-            onMouseEnter={() => { isPausedRef.current = true }}
-            onMouseLeave={() => { isPausedRef.current = false }}
+            ref={trackRef}
+            style={{
+              display: 'flex',
+              gap: '20px',
+              width: 'max-content',
+              willChange: 'transform',
+            }}
           >
-            <div className="carousel-fade-left" />
-            <div className="carousel-fade-right" />
-
-            <div
-              ref={trackRef}
-              style={{
-                display: 'flex',
-                gap: '20px',
-                width: 'max-content',
-                willChange: 'transform',
-              }}
-            >
-              {loopedCerts.map((cert, i) => (
-                <div
-                  key={`${cert.id}-${i}`}
-                  className="cert-card"
-                  onClick={() => cert.image_url && setSelected(cert)}
-                >
-                  <div className="cert-img-wrapper">
-                    {cert.image_url ? (
-                      <img src={cert.image_url} alt={cert.title} className="cert-img" />
-                    ) : (
-                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.15 }}>
-                        <div style={{ width: '48px', height: '48px', border: '1px solid #39ff14', borderRadius: '8px' }} />
-                      </div>
-                    )}
-                    {cert.image_url && (
-                      <div className="cert-hover-overlay">
-                        <span style={{ fontFamily: 'monospace', fontSize: '10px', letterSpacing: '0.2em', color: '#39ff14', border: '1px solid rgba(57,255,20,0.4)', padding: '6px 14px', borderRadius: '4px' }}>
-                          VIEW
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="cert-info">
-                    <h3 style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, color: '#fff', fontSize: '13px', marginBottom: '6px', lineHeight: 1.4 }}>
-                      {cert.title}
-                    </h3>
-                    <p style={{ fontFamily: 'monospace', fontSize: '10px', color: '#39ff14', letterSpacing: '0.15em' }}>
-                      {cert.date}
-                    </p>
-                  </div>
+            {loopedCerts.map((cert, i) => (
+              <div
+                key={`${cert.id}-${i}`}
+                className="cert-card"
+                onClick={() => cert.image_url && setSelected(cert)}
+              >
+                <div className="cert-img-wrapper">
+                  {cert.image_url ? (
+                    <img src={cert.image_url} alt={cert.title} className="cert-img" />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.15 }}>
+                      <div style={{ width: '48px', height: '48px', border: '1px solid #39ff14', borderRadius: '8px' }} />
+                    </div>
+                  )}
+                  {cert.image_url && (
+                    <div className="cert-hover-overlay">
+                      <span style={{ fontFamily: 'monospace', fontSize: '10px', letterSpacing: '0.2em', color: '#39ff14', border: '1px solid rgba(57,255,20,0.4)', padding: '6px 14px', borderRadius: '4px' }}>
+                        VIEW
+                      </span>
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
+
+                <div className="cert-info">
+                  <h3 style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, color: '#fff', fontSize: '13px', marginBottom: '6px', lineHeight: 1.4 }}>
+                    {cert.title}
+                  </h3>
+                  <p style={{ fontFamily: 'monospace', fontSize: '10px', color: '#39ff14', letterSpacing: '0.15em' }}>
+                    {cert.date}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
       </section>
 
       {/* Lightbox */}

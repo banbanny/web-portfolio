@@ -1,8 +1,13 @@
 'use client'
-import { useEffect, useState } from 'react'
-import { supabase, TechStack as TechStackType } from '@/lib/supabase'
 
-const fallbackStack = [
+interface TechItem {
+  id: string
+  name: string
+  category: string
+  icon_url: string
+}
+
+const stack: TechItem[] = [
   // Tech Stack
   { id: '1',  name: 'HTML',        category: 'Tech Stack',        icon_url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
   { id: '2',  name: 'CSS',         category: 'Tech Stack',        icon_url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
@@ -24,18 +29,8 @@ const fallbackStack = [
 ]
 
 export default function TechStack() {
-  const [stack, setStack] = useState<TechStackType[]>([])
-
-  useEffect(() => {
-    const fetchStack = async () => {
-      const { data, error } = await supabase.from('tech_stack').select('*')
-      setStack(data && !error ? data : fallbackStack)
-    }
-    fetchStack()
-  }, [])
-
-  const techStack      = stack.filter(t => t.category === 'Tech Stack')
-  const devTools       = stack.filter(t => t.category === 'Development Tools')
+  const techStack = stack.filter(t => t.category === 'Tech Stack')
+  const devTools  = stack.filter(t => t.category === 'Development Tools')
 
   return (
     <>
@@ -91,7 +86,6 @@ export default function TechStack() {
 
       <section id="tech-stack" className="py-32 px-6" style={{ maxWidth: '1152px', margin: '0 auto', marginBottom: '120px' }}>
 
-        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
           <h2 className="section-title text-white">
             Tech Stack<span className="neon-text-cyan">.</span>
@@ -100,7 +94,6 @@ export default function TechStack() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
 
-          {/* ── Section 1: Tech Stack ── */}
           <div style={{
             background: '#0a0a0f',
             border: '1px solid rgba(255,255,255,0.06)',
@@ -129,7 +122,6 @@ export default function TechStack() {
             </div>
           </div>
 
-          {/* ── Section 2: Development & Design Tools ── */}
           <div style={{
             background: '#0a0a0f',
             border: '1px solid rgba(255,255,255,0.06)',
@@ -138,7 +130,7 @@ export default function TechStack() {
             boxShadow: '0 0 40px rgba(191,0,255,0.03)',
           }}>
             <p style={{ fontFamily: 'monospace', fontSize: '10px', letterSpacing: '0.3em', textTransform: 'uppercase', color: '#bf00ff', marginBottom: '24px' }}>
-              ─── JUST A SAMPLE DEVELOPMENT AND DESIGN TOOLS. YOU CAN MODIFY THIS TO SHOW YOUR ACTUAL SKILLS.
+              ─── JUST A SAMPLE DEVELOPMENT AND DESIGN. YOU CAN MODIFY THIS TO SHOW YOUR ACTUAL SKILLS.
             </p>
             <div style={{
               display: 'grid',

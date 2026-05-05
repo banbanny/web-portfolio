@@ -1,6 +1,14 @@
 'use client'
-import { useEffect, useState } from 'react'
-import { supabase, Project } from '@/lib/supabase'
+import { useState } from 'react'
+
+interface Project {
+  id: string
+  title: string
+  description: string
+  category: string
+  link: string
+  image_url: string
+}
 
 const categories = ['All', 'website', 'figma', 'graphic']
 const categoryLabels: Record<string, string> = {
@@ -15,10 +23,10 @@ const categoryColors: Record<string, string> = {
   graphic: '#ff0090',
 }
 
-const BEHANCE_URL = 'YOUR LINK HERE'
-const FIGMA_URL   = 'YOUR LINK HERE'
+const BEHANCE_URL = 'https://www.behance.net/ivanneobediente23'
+const FIGMA_URL   = 'https://www.figma.com/@YOUR_USERNAME'
 
-const fallbackProjects: Project[] = [
+const projects: Project[] = [
   {
     id: '1',
     title: 'Portfolio Website',
@@ -70,21 +78,7 @@ const fallbackProjects: Project[] = [
 ]
 
 export default function Projects() {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [filter, setFilter]     = useState('All')
-  const [loading, setLoading]   = useState(true)
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .order('created_at', { ascending: false })
-      setProjects(data && !error ? data : fallbackProjects)
-      setLoading(false)
-    }
-    fetchProjects()
-  }, [])
+  const [filter, setFilter] = useState('All')
 
   const getHref = (project: Project) => {
     if (project.category === 'figma') return project.link || FIGMA_URL
@@ -99,7 +93,6 @@ export default function Projects() {
   const showBehancePortal = filter === 'graphic'
   const showBehanceInGrid = filter === 'All'
 
-  // Cards to display: exclude graphic projects (those go to Behance)
   const displayProjects = filter === 'All'
     ? projects.filter(p => p.category !== 'graphic')
     : filter === 'graphic'
@@ -144,7 +137,6 @@ export default function Projects() {
           to   { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* ── Project cards ── */
         .proj-card {
           background: #0a0a0f; border: 1px solid rgba(255,255,255,0.07);
           border-radius: 12px; overflow: hidden;
@@ -191,7 +183,6 @@ export default function Projects() {
         }
         .proj-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#0d0d14; }
 
-        /* ── Full Behance portal (graphic filter only) ── */
         .behance-portal {
           position:relative; border-radius:20px; border:1px solid rgba(23,105,255,0.2);
           background:#07050a; overflow:hidden; cursor:pointer;
@@ -265,7 +256,6 @@ export default function Projects() {
           pointer-events:none; z-index:1;
         }
 
-        /* ── Behance mini-card (in All grid) ── */
         .behance-mini {
           background:#07050a; border:1px solid rgba(23,105,255,0.18); border-radius:12px;
           overflow:hidden; animation:cardReveal 0.45s ease both;
@@ -300,7 +290,6 @@ export default function Projects() {
           color:#fff; box-shadow:0 0 16px rgba(23,105,255,0.3);
         }
 
-        /* ── Filter buttons ── */
         .filter-btn {
           font-family:monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase;
           padding:8px 20px; border-radius:6px; border:1px solid; cursor:pointer;
@@ -310,7 +299,6 @@ export default function Projects() {
 
       <section id="projects" className="py-32 px-6" style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
-        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
           <p style={{
             fontFamily: 'monospace', fontSize: '11px', letterSpacing: '0.25em',
@@ -323,10 +311,8 @@ export default function Projects() {
           </h2>
         </div>
 
-        {/* Divider */}
         <div style={{ width: '40px', height: '2px', background: '#ff0090', margin: '24px auto 56px', borderRadius: '2px' }} />
 
-        {/* Filter tabs */}
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px', marginBottom: '52px' }}>
           {categories.map(cat => (
             <button
@@ -345,14 +331,7 @@ export default function Projects() {
           ))}
         </div>
 
-        {/* ── Content ── */}
-        {loading ? (
-          <div style={{ textAlign:'center', fontFamily:'monospace', color:'#00f5ff', fontSize:'11px', letterSpacing:'0.2em' }} className="animate-pulse">
-            LOADING PROJECTS...
-          </div>
-
-        ) : showBehancePortal ? (
-          /* ═══ GRAPHIC DESIGN filter → full Behance portal ═══ */
+        {showBehancePortal ? (
           <a href={BEHANCE_URL} target="_blank" rel="noopener noreferrer" className="behance-portal">
             <div className="behance-grid-bg" />
             <div className="behance-scanline" />
@@ -378,7 +357,6 @@ export default function Projects() {
           </a>
 
         ) : (
-          /* ═══ ALL / WEB / FIGMA → project cards + optional Behance mini-card ═══ */
           <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'24px' }}>
             {displayProjects.map((project, i) => {
               const color = categoryColors[project.category] || '#00f5ff'
@@ -422,7 +400,6 @@ export default function Projects() {
               )
             })}
 
-            {/* Behance mini-card — only in All filter, appended at end */}
             {showBehanceInGrid && (
               <a
                 href={BEHANCE_URL} target="_blank" rel="noopener noreferrer"
