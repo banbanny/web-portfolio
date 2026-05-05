@@ -5,16 +5,9 @@ export default function Footer() {
     <footer id="contact" className="border-t border-[#00f5ff]/10 py-16 px-5 sm:px-6">
       <div style={{ maxWidth: '1152px', margin: '0 auto' }}>
 
-        {/* Main section — always row, wraps only when too narrow */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '24px',
-          marginBottom: '48px',
-        }}>
+        {/* Main section */}
+        <div className="flex flex-col items-center text-center md:flex-row md:justify-between md:items-center md:text-left"
+          style={{ gap: '24px', marginBottom: '48px' }}>
 
           {/* Big name */}
           <p style={{
@@ -30,13 +23,13 @@ export default function Footer() {
             YOUR NAME
           </p>
 
-          {/* Contact block — always to the right */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', alignItems: 'flex-end' }}>
+          {/* Contact block */}
+          <div className="flex flex-col items-center md:items-end" style={{ gap: '14px' }}>
             <p style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '0.3em', color: '#00f5ff', textTransform: 'uppercase' }}>
               Want to Collaborate?
             </p>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'flex-end' }}>
+            <div className="flex flex-wrap justify-center md:justify-end" style={{ gap: '10px' }}>
               <a href="mailto:nobody@example.com"
                 style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '0.1em', color: '#9ca3af', display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 14px', border: '1px solid rgba(0,245,255,0.15)', borderRadius: '6px', textDecoration: 'none', transition: 'all 0.3s ease' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#00f5ff'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(0,245,255,0.4)' }}
@@ -57,7 +50,7 @@ export default function Footer() {
 
             <div style={{ width: '100%', height: '1px', background: 'rgba(0,245,255,0.08)' }} />
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'flex-end' }}>
+            <div className="flex flex-wrap justify-center md:justify-end" style={{ gap: '10px' }}>
               <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer"
                 style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '0.1em', color: '#9ca3af', display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 14px', border: '1px solid rgba(0,245,255,0.15)', borderRadius: '6px', textDecoration: 'none', transition: 'all 0.3s ease' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#00f5ff'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(0,245,255,0.4)' }}
