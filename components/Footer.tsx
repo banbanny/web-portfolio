@@ -81,7 +81,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div style={{ borderTop: '1px solid rgba(0,245,255,0.08)', paddingTop: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
           <p style={{ fontFamily: 'monospace', fontSize: '10px', color: '#374151', letterSpacing: '0.15em' }}>
-            © {new Date().getFullYear()} IVANNE OBEDIENTE ● 
+            © {new Date().getFullYear()} NOBODY● 
         All Rights Reserved.
           </p>
           
